@@ -8,13 +8,17 @@ import { emailBody } from '../helpers/mails/email.body';
 class AuthController {
 	static async signup(req, res) {
 		const newUser = await UserService.createUser({
-			firstName: `${req.body.firstName.charAt(0).toUpperCase()}${req.body.firstName.slice(1)}`,
-			lastName: `${req.body.lastName.charAt(0).toUpperCase()}${req.body.lastName.slice(1)}`,
+			firstName: `${req.body.firstName
+				.charAt(0)
+				.toUpperCase()}${req.body.firstName.slice(1)}`,
+			lastName: `${req.body.lastName
+				.charAt(0)
+				.toUpperCase()}${req.body.lastName.slice(1)}`,
 			email: req.body.email,
 			password: BcryptService.hashPassword(req.body.password),
 		});
 
-		ResponseService.setSuccess(201, 'Created', {
+		ResponseService.setSuccess(201, 'You account has been created', {
 			id: newUser.id,
 			firstName: newUser.firstName,
 			lastName: newUser.lastName,
@@ -31,34 +35,35 @@ class AuthController {
 			email: req.body.email,
 		});
 
+		const userData = {
+			id: user.id,
+			firstName: user.firstName,
+			lastName: user.lastName,
+			email: user.email,
+			role: user.role,
+			createdAt: user.createdAt,
+			updatedAt: user.updatedAt,
+		};
+
 		ResponseService.setSuccess(200, 'You are successfully logged in', {
-			token: TokenService.generateToken({
-				id: user.id,
-				firstName: user.firstName,
-				lastName: user.lastName,
-				email: user.email,
-				role: user.role,
-				createdAt: user.createdAt,
-				updatedAt: user.updatedAt,
-			}),
+			token: TokenService.generateToken(userData),
+			user: userData,
 		});
 		return ResponseService.send(res);
 	}
 
 	static async loginWithSocialMedias(req, res) {
 		const user = await UserService.findByProperty({ email: req.user.email });
-		ResponseService.setSuccess(200, 'You are successfully logged in', {
-			token: TokenService.generateToken({
-				id: user.id,
-				firstName: user.firstName,
-				lastName: user.lastName,
-				email: user.email,
-				role: user.role,
-				createdAt: user.createdAt,
-				updatedAt: user.updatedAt,
-			}),
+		const token = TokenService.generateToken({
+			id: user.id,
+			firstName: user.firstName,
+			lastName: user.lastName,
+			email: user.email,
+			role: user.role,
+			createdAt: user.createdAt,
+			updatedAt: user.updatedAt,
 		});
-		return ResponseService.send(res);
+		return res.redirect(`${process.env.FRONTEND_URL}/oauth?token=${token}`);
 	}
 
 	static async SearchAccount(req, res) {
@@ -101,7 +106,9 @@ class AuthController {
 	}
 
 	static async editUserProfile(req, res) {
-		req.files.profilePicture.mv(`./src/uploads/${req.files.profilePicture.name}`);
+		req.files.profilePicture.mv(
+			`./src/uploads/${req.files.profilePicture.name}`
+		);
 		const id = parseInt(req.params.id);
 		await UserService.updateProperty(
 			{ id },
@@ -110,7 +117,8 @@ class AuthController {
 				lastName: req.body.lastName,
 				dateOfBirth: req.body.dateOfBirth,
 				address: req.body.address,
-				profilePicture: req.files.profilePicture.name && req.files.profilePicture.name,
+				profilePicture:
+					req.files.profilePicture.name && req.files.profilePicture.name,
 			}
 		);
 		const {

@@ -28,7 +28,7 @@ export async function checkComment(req, res, next) {
 	}
 
 	if (comment.userId !== req.userData.id) {
-		ResponseService.setError(401, "You are not allowed to edit other's post");
+		ResponseService.setError(401, "You are not allowed to delete other's post");
 		return ResponseService.send(res);
 	}
 	next();

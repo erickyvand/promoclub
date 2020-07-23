@@ -136,7 +136,7 @@ class PostController {
 		const unlikes = await UnlikeService.countUnlike({
 			postId: parseInt(req.params.postId),
 		});
-		ResponseService.setSuccess(200, 'Total number of likes', unlikes);
+		ResponseService.setSuccess(200, 'Total number of dislikes', unlikes);
 		return ResponseService.send(res);
 	}
 }

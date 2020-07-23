@@ -53,7 +53,7 @@ router.get(
 	CommentController.viewComments
 );
 router.patch(
-	'/:postId/comments/:commentId',
+	'/:postId/comments/:commentId/edit',
 	allowAssessRoute,
 	validateUrlIds,
 	checkPostExists,
@@ -62,7 +62,7 @@ router.patch(
 	CommentController.editComment
 );
 router.delete(
-	'/:postId/comments/:commentId',
+	'/:postId/comments/:commentId/delete',
 	allowAssessRoute,
 	validateUrlIds,
 	checkPostExists,

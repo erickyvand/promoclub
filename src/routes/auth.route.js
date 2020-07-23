@@ -19,7 +19,7 @@ import {
 
 const router = express.Router();
 
-router.post('/signup', checkUserExists, validateSignup, AuthController.signup);
+router.post('/signup', validateSignup, checkUserExists, AuthController.signup);
 router.post('/login', validateLogin, loginUser, AuthController.login);
 router.get(
 	'/google',
@@ -42,7 +42,7 @@ router.get(
 	}),
 	AuthController.loginWithSocialMedias
 );
-router.get(
+router.post(
 	'/search-account',
 	validateUserEmail,
 	checkUserEmailExists,
