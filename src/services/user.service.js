@@ -20,11 +20,15 @@ class UserService {
 	}
 
 	static updateProperty(clause, property) {
-    return User.update(property, {
-      where: clause,
-      returning: true
+		return User.update(property, {
+			where: clause,
+			returning: true,
 		});
-	}	
+	}
+
+	static findAllUsers(property) {
+		return User.findAll({ where: property });
+	}
 }
 
 export default UserService;
