@@ -22,6 +22,7 @@ const router = express.Router();
 router.post('/', allowAssessRoute, validateUserPost, PostController.postStatus);
 router.get('/', allowAssessRoute, PostController.viewPosts);
 router.get('/view', allowAssessRoute, PostController.viewOwnPosts);
+router.get('/gallery', allowAssessRoute, PostController.viewGallery);
 router.patch(
 	'/:postId/edit',
 	allowAssessRoute,

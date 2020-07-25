@@ -22,6 +22,7 @@ This API has different endpoints which are:
 - POST `/api/posts`: Post a status
 - GET `/api/posts`: Get all posts
 - GET `/api/posts/view`: Get your own posts
+- GET `api/posts/gallery`: Get your gallery media files
 - PATCH `/api/posts/:postId/edit`: Edit post status
 - DELETE `/api/posts/:postId/delete`: Detele post status
 - POST `/api/posts/:postId/comments`: Comment on a post

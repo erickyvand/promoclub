@@ -55,6 +55,32 @@ class PostController {
 			rows: results.rows,
 		});
 		return ResponseService.send(res);
+  }
+  
+	static async viewGallery(req, res) {
+		const { page = 1, limit = 10 } = req.query;
+    const offset = (page - 1) * limit;
+
+    const results = await PostService.getOwnPosts(
+      { userId: req.userData.id },
+      { offset, limit }
+    );
+
+    const mediaResults = results.rows.map(result => {
+			return {
+        mediaFile: result.mediaFile
+			};
+		});
+    ResponseService.setSuccess(200, "Your posts", {
+      pageMeta: paginationHelper({
+        count: results.count,
+        rows: results.rows,
+        offset,
+        limit,
+      }),
+      rows: mediaResults,
+    });
+    return ResponseService.send(res);
 	}
 
 	static async editPost(req, res) {
