@@ -5,6 +5,8 @@
   "main": "app.js",
   "scripts": {
     "dev-server": "nodemon --exec babel-node src/app.js",
+    "build": "babel src  --out-dir production",
+    "start": "node production/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

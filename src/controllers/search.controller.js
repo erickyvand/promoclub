@@ -22,6 +22,7 @@ class SearchController {
 				id: result.id,
 				firstName: result.firstName,
 				lastName: result.lastName,
+				profilePicture: result.profilePicture,
 			};
 			return user;
 		});

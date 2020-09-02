@@ -59,8 +59,16 @@ class PostController {
 	}
 
 	static async countOwnPosts(req, res) {
-		const ownPosts = await PostService.getAllOwnPosts({ userId: req.userData.id });
+		const ownPosts = await PostService.getAllOwnPosts({
+			userId: req.userData.id,
+		});
 		ResponseService.setSuccess(200, 'Count your posts', ownPosts);
+		return ResponseService.send(res);
+	}
+
+	static async getSinglePost(req, res) {
+		const post = await PostService.findPost({ id: req.params.postId });
+		ResponseService.setSuccess(200, 'Post result', post);
 		return ResponseService.send(res);
 	}
 

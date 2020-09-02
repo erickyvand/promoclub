@@ -51,7 +51,13 @@ class PostService {
 	}
 
 	static findPost(postId) {
-		return Post.findOne({ where: postId });
+		return Post.findOne({
+			where: postId,
+			include: {
+				model: User,
+				attributes: ['id', 'firstName', 'lastName', 'profilePicture'],
+			},
+		});
 	}
 
 	static updatePost(postId, property) {

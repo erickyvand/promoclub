@@ -26,7 +26,14 @@ const router = express.Router();
 router.post('/', allowAssessRoute, validateUserPost, PostController.postStatus);
 router.get('/', allowAssessRoute, PostController.viewPosts);
 router.get('/view/:userId', allowAssessRoute, PostController.viewOwnPosts);
-router.get('/count/:userId', allowAssessRoute, PostController.countOwnPosts)
+router.get('/count/:userId', allowAssessRoute, PostController.countOwnPosts);
+router.get(
+	'/:postId/post',
+	allowAssessRoute,
+	validatePostUrlParam,
+	checkPostExists,
+	PostController.getSinglePost
+);
 router.patch(
 	'/:postId/edit',
 	allowAssessRoute,
@@ -83,11 +90,7 @@ router.patch(
 	checkLiked,
 	PostController.likePost
 );
-router.get(
-	'/likes',
-	allowAssessRoute,
-	PostController.getCountedLikes
-);
+router.get('/likes', allowAssessRoute, PostController.getCountedLikes);
 router.patch(
 	'/:postId/unlike',
 	allowAssessRoute,
