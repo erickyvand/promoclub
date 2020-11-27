@@ -1,8 +1,11 @@
 import jwt from 'jsonwebtoken';
 
+/**
+ * Token service class
+ */
 class TokenService {
 	/**
-	 * @param {object} data
+	 * @param {string} data
 	 * @returns {string} function to generate a token string
 	 */
 	static generateToken(data) {
@@ -11,6 +14,10 @@ class TokenService {
 		});
 	}
 
+	/**
+	 * @param  {string} token
+	 * @returns {object} function to verify a token
+	 */
 	static verifyToken(token) {
 		return jwt.verify(token, process.env.SECRET, (err, decoded) => {
 			if (err) {

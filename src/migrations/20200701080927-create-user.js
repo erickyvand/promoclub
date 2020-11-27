@@ -1,3 +1,8 @@
+/**
+ * @param  {object} queryInterface
+ * @param  {object} Sequelize
+ * @returns {object} function to create users table
+ */
 export async function up(queryInterface, Sequelize) {
 	await queryInterface.createTable('Users', {
 		id: {
@@ -48,6 +53,12 @@ export async function up(queryInterface, Sequelize) {
 		},
 	});
 }
+
+/**
+ * @param  {object} queryInterface
+ * @param  {object} Sequelize
+ * @returns {object} function to drop users table
+ */
 export async function down(queryInterface, Sequelize) {
 	await queryInterface.dropTable('Users');
 }

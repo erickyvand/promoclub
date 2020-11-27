@@ -4,8 +4,17 @@ import BcryptService from '../services/bcrypt.service';
 import TokenService from '../services/token.service';
 import SendEmailService from '../services/send-email.service';
 import { emailBody } from '../helpers/mails/email.body';
+import cloudinary from '../helpers/cloudinary.helper';
 
+/**
+ * Auth controller class
+ */
 class AuthController {
+	/**
+	 * @param {object} req
+	 * @param {object} res
+	 * @returns {object} this function signup a user
+	 */
 	static async signup(req, res) {
 		const newUser = await UserService.createUser({
 			firstName: `${req.body.firstName
@@ -30,6 +39,11 @@ class AuthController {
 		return ResponseService.send(res);
 	}
 
+	/**
+	 * @param {object} req
+	 * @param {object} res
+	 * @returns {object} this function login a user
+	 */
 	static async login(req, res) {
 		const user = await UserService.findByProperty({
 			email: req.body.email,
@@ -53,6 +67,11 @@ class AuthController {
 		return ResponseService.send(res);
 	}
 
+	/**
+	 * @param {object} req
+	 * @param {object} res
+	 * @returns {object} this function login a user with social medias
+	 */
 	static async loginWithSocialMedias(req, res) {
 		const user = await UserService.findByProperty({ email: req.user.email });
 		const token = TokenService.generateToken({
@@ -68,6 +87,11 @@ class AuthController {
 		return res.redirect(`${process.env.FRONTEND_URL}/oauth?token=${token}`);
 	}
 
+	/**
+	 * @param {object} req
+	 * @param {object} res
+	 * @returns {object} this function search a user account
+	 */
 	static async SearchAccount(req, res) {
 		const token = TokenService.generateToken({ email: req.body.email });
 		SendEmailService.sendEmailToUser(
@@ -79,6 +103,11 @@ class AuthController {
 		return ResponseService.send(res);
 	}
 
+	/**
+	 * @param {object} req
+	 * @param {object} res
+	 * @returns {object} this function reset a user account password
+	 */
 	static async ResetPassword(req, res) {
 		await UserService.updateProperty(
 			{ email: req.userData.email },
@@ -88,6 +117,11 @@ class AuthController {
 		return ResponseService.send(res);
 	}
 
+	/**
+	 * @param {object} req
+	 * @param {object} res
+	 * @returns {object} this function show a user profile
+	 */
 	static async viewProfile(req, res) {
 		const user = await UserService.findByProperty({
 			id: parseInt(req.params.id),
@@ -107,10 +141,21 @@ class AuthController {
 		return ResponseService.send(res);
 	}
 
+	/**
+	 * @param {object} req
+	 * @param {object} res
+	 * @returns {object} this function edit a user profile
+	 */
 	static async editUserProfile(req, res) {
 		req.files.profilePicture.mv(
 			`./src/public/${req.files.profilePicture.name}`
 		);
+
+		const file = await cloudinary.uploader.upload(
+			`./src/public/${req.files.profilePicture.name}`,
+			{ resource_type: 'auto' }
+		);
+
 		const id = parseInt(req.params.id);
 		await UserService.updateProperty(
 			{ id },
@@ -119,10 +164,10 @@ class AuthController {
 				lastName: req.body.lastName,
 				dateOfBirth: req.body.dateOfBirth,
 				address: req.body.address,
-				profilePicture:
-					req.files.profilePicture.name && req.files.profilePicture.name,
+				profilePicture: req.files.profilePicture.name && file.secure_url,
 			}
 		);
+
 		const {
 			firstName,
 			lastName,
@@ -145,6 +190,11 @@ class AuthController {
 		return ResponseService.send(res);
 	}
 
+	/**
+	 * @param {object} req
+	 * @param {object} res
+	 * @returns {object} this function shwo all users
+	 */
 	static async getUsers(req, res) {
 		const usersData = await UserService.findAllUsers();
 		const users = usersData.map(userData => {

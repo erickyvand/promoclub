@@ -3,7 +3,15 @@ import SearchService from '../services/search.service';
 import ResponseService from '../services/response.service';
 import { paginationHelper } from '../helpers';
 
+/**
+ * Search class Controller
+*/
 class SearchController {
+	/**
+	 * @param {object} req
+	 * @param {object} res
+	 * @returns {object} function to post a comment
+	 */
 	static async searchContent(req, res) {
 		const { term } = req.query;
 		const { page = 1, limit = 10 } = req.query;
@@ -15,7 +23,7 @@ class SearchController {
 					lastName: { [Op.iLike]: `%${term}%` },
 				},
 			},
-			{ offset, limit }
+			{ offset, limit },
 		);
 		const userResults = results.rows.map(result => {
 			const user = {

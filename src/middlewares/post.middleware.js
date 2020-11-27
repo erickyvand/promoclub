@@ -12,6 +12,12 @@ export const checkUserAccount = (req, res, next) => {
 	next();
 };
 
+/**
+ * @param {object} req
+ * @param {object} res
+ * @param {object} next
+ * @returns {object} function to check post owner
+ */
 export async function checkPostOwner(req, res, next) {
 	const post = await PostService.findPost({ id: req.params.postId });
 
@@ -27,6 +33,12 @@ export async function checkPostOwner(req, res, next) {
 	next();
 }
 
+/**
+ * @param {object} req
+ * @param {object} res
+ * @param {object} next
+ * @returns {object} function to check liked posts
+ */
 export async function checkLiked(req, res, next) {
 	const userId = req.userData.id;
 	const likeId = parseInt(`${userId}${req.params.postId}`);
@@ -44,6 +56,12 @@ export async function checkLiked(req, res, next) {
 	next();
 }
 
+/**
+ * @param {object} req
+ * @param {object} res
+ * @param {object} next
+ * @returns {object} function to check unliked posts
+ */
 export async function checkUnliked(req, res, next) {
 	const userId = req.userData.id;
 	const unlikeId = parseInt(`${userId}${req.params.postId}`);

@@ -70,6 +70,6 @@ router.patch(
 	AuthController.editUserProfile
 );
 
-router.get('/users', allowAssessRoute, AuthController.getUsers) 
+router.get('/users', allowAssessRoute, AuthController.getUsers);
 
 export default router;

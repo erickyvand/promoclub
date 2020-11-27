@@ -3,7 +3,6 @@ import NotificationController from '../controllers/notification.controller';
 import { allowAssessRoute } from '../middlewares/user.middleware';
 import { validateNotificationUrlParam } from '../validations/notification.validation';
 import { checkNotificationExists } from '../middlewares/notification.middleware';
-import NotificationService from '../services/notification.service';
 
 const router = express.Router();
 
