@@ -1,11 +1,13 @@
-'use strict';
 const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
+	/**
+	 * Unlike model class
+	 */
 	class Unlike extends Model {
 		/**
-		 * Helper method for defining associations.
-		 * This method is not a part of Sequelize lifecycle.
-		 * The `models/index` file will call this method automatically.
+		 * @param {object} models
+		 * @returns {object} function to define association
 		 */
 		static associate(models) {
 			// define association here
@@ -15,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
 	}
 	Unlike.init(
 		{
-      unlikeId: DataTypes.INTEGER,
+			unlikeId: DataTypes.INTEGER,
 			userId: DataTypes.INTEGER,
 			postId: DataTypes.INTEGER,
 			isUnliked: DataTypes.BOOLEAN,

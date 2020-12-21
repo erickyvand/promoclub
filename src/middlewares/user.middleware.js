@@ -19,7 +19,7 @@ export async function checkUserExists(req, res, next) {
 	if (user) {
 		ResponseService.setError(
 			409,
-			'Email already taken, please choose another email'
+			'Email already taken, please choose another email',
 		);
 		return ResponseService.send(res);
 	}
@@ -31,7 +31,7 @@ export async function checkUserExists(req, res, next) {
  * @param  {function} next
  * @returns {object} this function check user authentication login
  */
-export async function loginUser(req, res, next) {
+export const loginUser = async (req, res, next) => {
 	const user = await UserService.findByProperty({
 		email: req.body.email,
 	});
@@ -45,7 +45,8 @@ export async function loginUser(req, res, next) {
 		return ResponseService.send(res);
 	}
 	next();
-}
+};
+
 /**
  * @param  {string} accessToken
  * @param  {string} refreshToken
@@ -57,7 +58,7 @@ export async function getGoogleProfileUserInfo(
 	accessToken,
 	refreshToken,
 	profile,
-	done
+	done,
 ) {
 	const user = await UserService.findByProperty({ email: profile._json.email });
 
@@ -66,7 +67,6 @@ export async function getGoogleProfileUserInfo(
 		lastName: profile._json.family_name,
 		email: profile._json.email,
 		password: BcryptService.hashPassword(Math.random().toString(36)),
-		profilePicture: profile._json.picture,
 	};
 	if (!user) {
 		await UserService.createUser(newUser);
@@ -85,7 +85,7 @@ export async function getFacebookProfileUserInfo(
 	accessToken,
 	refreshToken,
 	profile,
-	done
+	done,
 ) {
 	const user = await UserService.findByProperty({ email: profile._json.email });
 
@@ -101,6 +101,7 @@ export async function getFacebookProfileUserInfo(
 	}
 	done(null, newUser);
 }
+
 /**
  * @param  {object} req
  * @param  {object} res
@@ -113,13 +114,19 @@ export async function checkUserEmailExists(req, res, next) {
 	if (!user) {
 		ResponseService.setError(
 			404,
-			'Results not found, make sure you have an account'
+			'Results not found, make sure you have an account',
 		);
 		return ResponseService.send(res);
 	}
 	next();
 }
 
+/**
+ * @param  {object} req
+ * @param  {object} res
+ * @param  {function} next
+ * @returns {object} this function to protect route.
+ */
 export const allowAssessRoute = (req, res, next) => {
 	const bearerHeader = req.headers.authorization;
 
@@ -137,7 +144,7 @@ export const allowAssessRoute = (req, res, next) => {
 		if (name === 'TokenExpiredError') {
 			ResponseService.setError(
 				401,
-				'Unauthorized, Token has expired signin again to get new token'
+				'Unauthorized, Token has expired signin again to get new token',
 			);
 			return ResponseService.send(res);
 		}
@@ -146,12 +153,18 @@ export const allowAssessRoute = (req, res, next) => {
 	} else {
 		ResponseService.setError(
 			403,
-			'You can not proceed without setting authorization token'
+			'You can not proceed without setting authorization token',
 		);
 		return ResponseService.send(res);
 	}
 };
 
+/**
+ * @param  {object} req
+ * @param  {object} res
+ * @param  {function} next
+ * @returns {object} this function check if a user.
+ */
 export async function findUser(req, res, next) {
 	const user = await UserService.findByProperty({
 		id: parseInt(req.params.id),
@@ -163,14 +176,17 @@ export async function findUser(req, res, next) {
 	next();
 }
 
+/**
+ * @param  {object} req
+ * @param  {object} res
+ * @param  {function} next
+ * @returns {object} this function check user own profile.
+ */
 export async function checkUserOwnProfile(req, res, next) {
-	const user = await UserService.findByProperty({
-		id: parseInt(req.params.id),
-	});
 	if (req.userData.id !== parseInt(req.params.id)) {
 		ResponseService.setError(
 			401,
-			'Unauthorized, make sure you have a valid token or it is your profile'
+			'Unauthorized, make sure you have a valid token or it is your profile',
 		);
 		return ResponseService.send(res);
 	}
@@ -184,11 +200,12 @@ export async function checkUserOwnProfile(req, res, next) {
 			'string.empty': 'Last Name is not allowed to be empty',
 			'string.min': 'Last Name length must be at least 2 characters long',
 		}),
-		dateOfBirth: JoiDate.date().max('now').utc().format('YYYY-MM-DD').messages({
-			'date.format': 'Date must be in YYYY-MM-DD format',
-			'date.max':
+		dateOfBirth: JoiDate.date().max('now').utc().format('YYYY-MM-DD')
+			.messages({
+				'date.format': 'Date must be in YYYY-MM-DD format',
+				'date.max':
 				'Date of Birth must be less than or equal to the current date',
-		}),
+			}),
 		address: Joi.string().min(4).messages({
 			'string.empty': 'Address is not allowed to be empty',
 			'string.min': 'Address length must be at least 4 characters long',
@@ -199,7 +216,7 @@ export async function checkUserOwnProfile(req, res, next) {
 	const { error } = schema.validate(req.body);
 
 	if (error) {
-		const errors = error.details.map(error => error.message);
+		const errors = error.details.map(err => err.message);
 		ResponseService.setError(400, errors);
 		return ResponseService.send(res);
 	}
@@ -213,7 +230,7 @@ export async function checkUserOwnProfile(req, res, next) {
 				lastName: req.body.lastName,
 				dateOfBirth: req.body.dateOfBirth,
 				address: req.body.address,
-			}
+			},
 		);
 		const {
 			firstName,
@@ -233,21 +250,21 @@ export async function checkUserOwnProfile(req, res, next) {
 			updatedAt,
 		});
 		return ResponseService.send(res);
-	} else {
-		const { profilePicture } = req.files;
-		if (
-			profilePicture.mimetype !== 'image/jpg' &&
-			profilePicture.mimetype !== 'image/jpeg' &&
-			profilePicture.mimetype !== 'image/png'
-		) {
-			ResponseService.setError(400, 'Only jpg, jpeg, png files are allowed');
-			return ResponseService.send(res);
-		}
-
-		if (profilePicture.size > 5000000) {
-			ResponseService.setError(400, 'Picture size must not exceed 5MB');
-			return ResponseService.send(res);
-		}
 	}
+	const { profilePicture } = req.files;
+	if (
+		profilePicture.mimetype !== 'image/jpg'
+			&& profilePicture.mimetype !== 'image/jpeg'
+			&& profilePicture.mimetype !== 'image/png'
+	) {
+		ResponseService.setError(400, 'Only jpg, jpeg, png files are allowed');
+		return ResponseService.send(res);
+	}
+
+	if (profilePicture.size > 5000000) {
+		ResponseService.setError(400, 'Picture size must not exceed 5MB');
+		return ResponseService.send(res);
+	}
+
 	next();
 }

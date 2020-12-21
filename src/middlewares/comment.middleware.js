@@ -2,6 +2,12 @@ import PostService from '../services/post.service';
 import ResponseService from '../services/response.service';
 import CommentService from '../services/comment.service';
 
+/**
+ * @param {object} req
+ * @param {object} res
+ * @param {object} next
+ * @returns {object} function to check if post exists
+ */
 export async function checkPostExists(req, res, next) {
 	const post = await PostService.findPost({ id: parseInt(req.params.postId) });
 
@@ -12,6 +18,12 @@ export async function checkPostExists(req, res, next) {
 	next();
 }
 
+/**
+ * @param {object} req
+ * @param {object} res
+ * @param {object} next
+ * @returns {object} function to check a comment
+ */
 export async function checkComment(req, res, next) {
 	const comment = await CommentService.findComment({
 		id: parseInt(req.params.commentId),

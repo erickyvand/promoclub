@@ -2,6 +2,9 @@ import models from '../models';
 
 const { User } = models;
 
+/**
+ * User Service clas
+*/
 class UserService {
 	/**
 	 * @param {object} user
@@ -19,6 +22,11 @@ class UserService {
 		return User.findOne({ where: property });
 	}
 
+	/**
+	 * @param {object} clause
+	 * @param {object} property
+	 * @returns {object} this function update a user
+	 */
 	static updateProperty(clause, property) {
 		return User.update(property, {
 			where: clause,
@@ -26,6 +34,9 @@ class UserService {
 		});
 	}
 
+	/**
+	 * @returns {object} this function get all users
+	 */
 	static findAllUsers() {
 		return User.findAll();
 	}

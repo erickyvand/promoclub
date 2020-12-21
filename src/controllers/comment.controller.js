@@ -4,7 +4,15 @@ import { paginationHelper } from '../helpers';
 import PostService from '../services/post.service';
 import NotificationService from '../services/notification.service';
 
+/**
+ * Comments controller class
+*/
 class CommentController {
+	/**
+	 * @param {object} req
+	 * @param {object} res
+	 * @returns {object} function to post a comment
+	 */
 	static async postComment(req, res) {
 		const postId = parseInt(req.params.postId);
 		const userId = req.userData.id;
@@ -28,13 +36,18 @@ class CommentController {
 		return ResponseService.send(res);
 	}
 
+	/**
+	 * @param {object} req
+	 * @param {object} res
+	 * @returns {object} function to view a comment
+	 */
 	static async viewComments(req, res) {
 		const { page = 1, limit = 10 } = req.query;
 		const offset = (page - 1) * limit;
 
 		const results = await CommentService.findAndCountComments(
 			{ postId: parseInt(req.params.postId) },
-			{ offset, limit }
+			{ offset, limit },
 		);
 		ResponseService.setSuccess(200, 'All Comments per post', {
 			pageMeta: paginationHelper({
@@ -48,25 +61,40 @@ class CommentController {
 		return ResponseService.send(res);
 	}
 
+	/**
+	 * @param {object} req
+	 * @param {object} res
+	 * @returns {object} function to view comments
+	 */
 	static async viewAllComments(req, res) {
 		const comments = await CommentService.getComments();
 		ResponseService.setSuccess(200, 'All comments posted', comments);
 		return ResponseService.send(res);
 	}
 
+	/**
+	 * @param {object} req
+	 * @param {object} res
+	 * @returns {object} function to edit a comment
+	 */
 	static async editComment(req, res) {
 		const updatedComment = await CommentService.updateComment(
 			{ id: parseInt(req.params.commentId) },
-			{ comment: req.body.comment }
+			{ comment: req.body.comment },
 		);
 		ResponseService.setSuccess(
 			200,
 			'Comment updated',
-			updatedComment[1][0].dataValues
+			updatedComment[1][0].dataValues,
 		);
 		return ResponseService.send(res);
 	}
 
+	/**
+	 * @param {object} req
+	 * @param {object} res
+	 * @returns {object} function to delete a comment
+	 */
 	static async deleteComment(req, res) {
 		await CommentService.destroyComment({ id: parseInt(req.params.commentId) });
 		ResponseService.setSuccess(200, 'Comment was deleted', Math.random());

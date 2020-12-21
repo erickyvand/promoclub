@@ -1,8 +1,5 @@
 import Joi from '@hapi/joi';
-import joiDate from '@hapi/joi-date';
 import ResponseService from '../services/response.service';
-
-const JoiDate = Joi.extend(joiDate);
 
 /**
  * @param  {object} req
@@ -31,7 +28,6 @@ export const validateSignup = (req, res, next) => {
 			'any.required': 'Password is required',
 			'string.min': 'Password length must be at least 6 characters long',
 			'string.empty': 'Password is not allowed to be empty',
-			'string.min': 'Password length must be at least 6 characters long',
 		}),
 		confirmPassword: Joi.string()
 			.required()
@@ -46,7 +42,7 @@ export const validateSignup = (req, res, next) => {
 	const { error } = signupSchema.validate(req.body);
 
 	if (error) {
-		const errors = error.details.map(error => error.message);
+		const errors = error.details.map(err => err.message);
 		ResponseService.setError(400, errors);
 		return ResponseService.send(res);
 	}
@@ -75,7 +71,7 @@ export const validateLogin = (req, res, next) => {
 	const { error } = loginSchama.validate(req.body);
 
 	if (error) {
-		const errors = error.details.map(error => error.message);
+		const errors = error.details.map(err => err.message);
 		ResponseService.setError(400, errors);
 		return ResponseService.send(res);
 	}
@@ -99,7 +95,7 @@ export const validateUserEmail = (req, res, next) => {
 	const { error } = schema.validate(req.body);
 
 	if (error) {
-		const errors = error.details.map(error => error.message);
+		const errors = error.details.map(err => err.message);
 		ResponseService.setError(400, errors);
 		return ResponseService.send(res);
 	}
@@ -126,7 +122,7 @@ export const validateUserResetPassword = (req, res, next) => {
 	const { error } = schema.validate(req.body);
 
 	if (error) {
-		const errors = error.details.map(error => error.message);
+		const errors = error.details.map(err => err.message);
 		ResponseService.setError(400, errors);
 		return ResponseService.send(res);
 	}
@@ -145,7 +141,7 @@ export const validateProfileInfo = (req, res, next) => {
 	const { error } = schema.validate(req.params);
 
 	if (error) {
-		const errors = error.details.map(error => error.message);
+		const errors = error.details.map(err => err.message);
 		ResponseService.setError(400, errors);
 		return ResponseService.send(res);
 	}

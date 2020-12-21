@@ -1,6 +1,7 @@
-import Joi from "@hapi/joi";
-import ResponseService from "../services/response.service";
+import Joi from '@hapi/joi';
+import ResponseService from '../services/response.service';
 
+// eslint-disable-next-line import/prefer-default-export
 export const validateNotificationUrlParam = (req, res, next) => {
 	const schema = Joi.object({
 		notificationId: Joi.string()
@@ -13,7 +14,7 @@ export const validateNotificationUrlParam = (req, res, next) => {
 	const { error } = schema.validate(req.params);
 
 	if (error) {
-		const errors = error.details.map(error => error.message);
+		const errors = error.details.map(err => err.message);
 		ResponseService.setError(400, errors);
 		return ResponseService.send(res);
 	}

@@ -10,8 +10,8 @@ passport.use(
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET,
 			callbackURL: '/api/auth/google/redirect',
 		},
-		getGoogleProfileUserInfo
-	)
+		getGoogleProfileUserInfo,
+	),
 );
 
 passport.use(
@@ -23,6 +23,6 @@ passport.use(
 			scope: ['public_profile', 'email'],
 			profileFields: ['id', 'email', 'name', 'photos'],
 		},
-		getFacebookProfileUserInfo
-	)
+		getFacebookProfileUserInfo,
+	),
 );

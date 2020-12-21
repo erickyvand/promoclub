@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/prefer-default-export
 export const emailBody = token => `
   <body style="margin: 0; padding: 0;">
     <div style="width: 100%;">

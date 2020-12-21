@@ -12,7 +12,7 @@ export const validatePostComment = (req, res, next) => {
 	const { error } = schema.validate(req.body);
 
 	if (error) {
-		const errors = error.details.map(error => error.message);
+		const errors = error.details.map(err => err.message);
 		ResponseService.setError(400, errors);
 		return ResponseService.send(res);
 	}
@@ -36,7 +36,7 @@ export const validateUrlIds = (req, res, next) => {
 	const { error } = schema.validate(req.params);
 
 	if (error) {
-		const errors = error.details.map(error => error.message);
+		const errors = error.details.map(err => err.message);
 		ResponseService.setError(400, errors);
 		return ResponseService.send(res);
 	}

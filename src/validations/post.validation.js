@@ -2,6 +2,12 @@ import Joi from '@hapi/joi';
 import ResponseService from '../services/response.service';
 import PostService from '../services/post.service';
 
+/**
+ * @param  {object} req
+ * @param  {object} res
+ * @param  {function} next
+ * @returns {object} function to validate user post.
+ */
 export async function validateUserPost(req, res, next) {
 	const schema = Joi.object({
 		post: Joi.string().required().messages({
@@ -14,7 +20,7 @@ export async function validateUserPost(req, res, next) {
 	const { error } = schema.validate(req.body);
 
 	if (error) {
-		const errors = error.details.map(error => error.message);
+		const errors = error.details.map(err => err.message);
 		ResponseService.setError(400, errors);
 		return ResponseService.send(res);
 	}
@@ -63,16 +69,22 @@ export const validatePostUrlParam = (req, res, next) => {
 	const { error } = schema.validate(req.params);
 
 	if (error) {
-		const errors = error.details.map(error => error.message);
+		const errors = error.details.map(err => err.message);
 		ResponseService.setError(400, errors);
 		return ResponseService.send(res);
 	}
 	next();
 };
 
+/**
+ * @param  {object} req
+ * @param  {object} res
+ * @param  {function} next
+ * @returns {object} function to validate edit post body.
+ */
 export async function validateUserEditPost(req, res, next) {
 	const schema = Joi.object({
-		post: Joi.string().required().messages({
+		post: Joi.string().optional().allow('').messages({
 			'any.required': 'Post is required',
 			'string.empty': 'Post is not allowed to be empty',
 		}),
@@ -82,7 +94,7 @@ export async function validateUserEditPost(req, res, next) {
 	const { error } = schema.validate(req.body);
 
 	if (error) {
-		const errors = error.details.map(error => error.message);
+		const errors = error.details.map(err => err.message);
 		ResponseService.setError(400, errors);
 		return ResponseService.send(res);
 	}
@@ -93,7 +105,11 @@ export async function validateUserEditPost(req, res, next) {
 			{ post: req.body.post }
 		);
 
-		ResponseService.setSuccess(200, 'Post updated', updatedPost[1][0].dataValues);
+		ResponseService.setSuccess(
+			200,
+			'Post updated',
+			updatedPost[1][0].dataValues
+		);
 		return ResponseService.send(res);
 	} else {
 		const { mediaFile } = req.files;
