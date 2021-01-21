@@ -46,7 +46,7 @@
     "pg-hstore": "^2.3.3",
     "regenerator-runtime": "^0.13.5",
     "sequelize": "^6.2.3",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.4.0"
   },
   "devDependencies": {
     "eslint": "^6.4.0",
