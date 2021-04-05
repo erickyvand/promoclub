@@ -1,4 +1,4 @@
-import Joi from '@hapi/joi';
+import Joi from 'joi';
 import joiDate from '@hapi/joi-date';
 import UserService from '../services/user.service';
 import ResponseService from '../services/response.service';

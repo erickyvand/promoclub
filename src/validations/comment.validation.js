@@ -1,4 +1,4 @@
-import Joi from '@hapi/joi';
+import Joi from 'joi';
 import ResponseService from '../services/response.service';
 
 export const validatePostComment = (req, res, next) => {
