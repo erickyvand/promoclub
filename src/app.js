@@ -6,6 +6,7 @@ import cors from 'cors';
 import path from 'path';
 import routes from './routes';
 import passportConfig from './config/passport.config';
+import ResponseService from './services/response.service';
 
 config();
 
@@ -17,6 +18,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(passport.initialize());
 
 app.use('/', routes);
+
+app.get('/', (req, res) => {
+	ResponseService.setSuccess(200, 'Promoclub API');
+	return ResponseService.send(res);
+});
+
+app.use('/', (req, res) => {
+	ResponseService.setError(404, 'The route does not exists');
+	return ResponseService.send(res);
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 const port = process.env.PORT || 3000;
